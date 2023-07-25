@@ -36,11 +36,12 @@ insert into user(first_name, last_name, user, password)
     
 -- book_user
 
-insert into book_user (book_id, user_id)
+insert into book_user (book_id, user_id, progress)
 	values
     (
 		(select book_id from book where book.name = 'Techno Odyssey'),
-		(select user_id from user where user.first_name = 'Amelia')
+		(select user_id from user where user.first_name = 'Amelia'),
+        'test'
 	);
 insert into book_user (book_id, user_id)
 	values
