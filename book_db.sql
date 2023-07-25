@@ -6,7 +6,7 @@ use book_db;
 
 CREATE TABLE book
 (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    book_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     progress ENUM ('Not Completed', 'In-Progress', 'Completed') NOT NULL
 );
@@ -36,7 +36,7 @@ insert into book(name)
 
 CREATE TABLE user
 (
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     user VARCHAR(255) NOT NULL,
