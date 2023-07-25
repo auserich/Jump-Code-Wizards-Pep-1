@@ -7,7 +7,8 @@ use book_db;
 CREATE TABLE book
 (
     book_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    progress ENUM ('Not Completed', 'In-Progress', 'Completed') NOT NULL
 );
 
 insert into book(name) 
@@ -38,17 +39,17 @@ CREATE TABLE user
 	user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-    user_name VARCHAR(255) NOT NULL,
-    user_pass VARCHAR(255) NOT NULL
+    user VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 
-insert into user(first_name, last_name, user_name, user_pass)
+insert into user(first_name, last_name, user, password)
 	values('Amelia', 'Anderson', 'a.anderson@email.com', 'password123');
-insert into user(first_name, last_name, user_name, user_pass)
+insert into user(first_name, last_name, user, password)
 	values('Benjamin', 'Brown', 'b.brown@email.com', 'password123');
-insert into user(first_name, last_name, user_name, user_pass)
+insert into user(first_name, last_name, user, password)
 	values('Charlotte', 'Carter', 'c.carter@email.com', 'password123');
-insert into user(first_name, last_name, user_name, user_pass)
+insert into user(first_name, last_name, user, password)
 	values('Daniel', 'Davis', 'd.davis@email.com', 'password123');
-insert into user(first_name, last_name, user_name, user_pass)
+insert into user(first_name, last_name, user, password)
 	values('Emma', 'Evans', 'e.evans@gmail.com', 'password123');
