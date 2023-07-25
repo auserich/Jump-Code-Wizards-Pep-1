@@ -1,15 +1,4 @@
-drop database if exists book_db;
-create database book_db;
-use book_db;
-
--- books
-
-CREATE TABLE book
-(
-    book_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    progress ENUM ('Not Completed', 'In-Progress', 'Completed') NOT NULL
-);
+-- book
 
 insert into book(name) 
 	values('Techno Odyssey');
@@ -31,17 +20,8 @@ insert into book(name)
 	values('Labyrinth of Clues');
 insert into book(name)
 	values('Beyond the Event Horizon');
-
--- users
-
-CREATE TABLE user
-(
-	user_id INT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
-    user VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
+    
+-- user
 
 insert into user(first_name, last_name, user, password)
 	values('Amelia', 'Anderson', 'a.anderson@email.com', 'password123');
@@ -53,3 +33,18 @@ insert into user(first_name, last_name, user, password)
 	values('Daniel', 'Davis', 'd.davis@email.com', 'password123');
 insert into user(first_name, last_name, user, password)
 	values('Emma', 'Evans', 'e.evans@gmail.com', 'password123');
+    
+-- book_user
+
+insert into book_user (book_id, user_id)
+	values
+    (
+		(select book_id from book where book.name = 'Techno Odyssey'),
+		(select user_id from user where user.first_name = 'Amelia')
+	);
+insert into book_user (book_id, user_id)
+	values
+    (
+		(select book_id from book where book.name = 'Uncanny Enigmas'),
+		(select user_id from user where user.first_name = 'Amelia')
+	);
