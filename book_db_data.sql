@@ -23,15 +23,15 @@ insert into book(name)
     
 -- user
 
-insert into user(first_name, last_name, user, password)
+insert into user(first_name, last_name, username, password)
 	values('Amelia', 'Anderson', 'a.anderson@email.com', 'password123');
-insert into user(first_name, last_name, user, password)
+insert into user(first_name, last_name, username, password)
 	values('Benjamin', 'Brown', 'b.brown@email.com', 'password123');
-insert into user(first_name, last_name, user, password)
+insert into user(first_name, last_name, username, password)
 	values('Charlotte', 'Carter', 'c.carter@email.com', 'password123');
-insert into user(first_name, last_name, user, password)
+insert into user(first_name, last_name, username, password)
 	values('Daniel', 'Davis', 'd.davis@email.com', 'password123');
-insert into user(first_name, last_name, user, password)
+insert into user(first_name, last_name, username, password)
 	values('Emma', 'Evans', 'e.evans@gmail.com', 'password123');
     
 -- book_user
@@ -41,7 +41,7 @@ insert into book_user (book_id, user_id, progress)
     (
 		(select book_id from book where book.name = 'Techno Odyssey'),
 		(select user_id from user where user.first_name = 'Amelia'),
-        'test'
+        'In-Progress'
 	);
 insert into book_user (book_id, user_id)
 	values
