@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import cWBook.book.user.User;
+
 
 
 public interface BookDao {
@@ -16,4 +18,7 @@ public interface BookDao {
 	// good testing functions for first draft
 	public List<Book> getAll();
 	public Optional<Book> findById(int id);
+	public Optional<Book> findByName(String name) throws SQLException;
+	public Optional<Book> add(Optional<User> user, Book book) throws SQLException;
+	public Optional<Book> add(Optional<Book> book) throws SQLException;
 }

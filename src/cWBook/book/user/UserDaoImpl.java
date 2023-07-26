@@ -39,6 +39,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
+	// returns a list of Users that share the username value passed in
 	public List<User> findByUsername(String username) throws SQLException {
 		
 		List<User> users = new ArrayList<>();
@@ -63,13 +64,17 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Boolean authenticateUser(String username, String password) throws SQLException {
+	// checks that the username and password values match their respective attributes in the User table
+	public Optional<User> authenticateUser(String username, String password) throws SQLException {
 		
 		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM user WHERE user.username = ? AND user.password = ?");
 		pstmt.setString(1, username);
 		pstmt.setString(2, password);
 		ResultSet rs = pstmt.executeQuery();
 		
-		return (rs.next()); // return true if query returned something
+		 if (rs.next())
+			 return Optional.of(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+		 else
+			 return null;
 	}
 }

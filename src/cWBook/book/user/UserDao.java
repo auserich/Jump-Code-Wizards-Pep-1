@@ -12,5 +12,5 @@ public interface UserDao {
 	public List<User> getAll();
 	public Optional<User> findById(int id);
 	public List<User> findByUsername(String username) throws SQLException;
-	public Boolean authenticateUser(String username, String password) throws SQLException;
+	public Optional<User> authenticateUser(String username, String password) throws SQLException;
 }
