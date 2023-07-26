@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/rjsey/CognixiaJUMP/MYSQLCONNECT/mysql-connector-j-8.1.0/mysql-connector-j-8.1.0.jar">
+	<classpathentry kind="lib" path="C:/Users/auser/OneDrive/Documents/Job Hunt Hell/JUMP Program/mysql-connector-j-8.1.0/mysql-connector-j-8.1.0/mysql-connector-j-8.1.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
