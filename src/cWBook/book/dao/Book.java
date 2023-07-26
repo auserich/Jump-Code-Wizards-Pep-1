@@ -44,5 +44,9 @@ public class Book {
 		this.name = name;
 		this.rating = rating;
 	}
+	
+	public Book(String name) {
+		this.name = name;
+	}
 
 }
