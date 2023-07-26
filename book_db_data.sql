@@ -39,8 +39,8 @@ insert into user(first_name, last_name, username, password)
 insert into book_user (book_id, user_id, progress)
 	values
     (
-		(select book_id from book),
-		(select user_id from user),
+		(select book_id from book where book.name = 'Techno Odyssey'),
+		(select user_id from user where user.first_name = 'Amelia'),
         'In-Progress'
 	);
 insert into book_user (book_id, user_id)
