@@ -16,6 +16,7 @@ public class LoginMenu extends Menu {
 	@Override
 	public void display() {
 		System.out.println("Welcome to Progress Tracker");
+		System.out.println();
 	}
 	
 	@Override
@@ -37,12 +38,18 @@ public class LoginMenu extends Menu {
 			}
 			
 			if (user != null) {
+				System.out.println();
 				System.out.println("Login successful.");
+				System.out.println();
 				return user;
 			}
 				
-			else
+			else {
+				System.out.println();
 				System.out.println("Login failed. Incorrect username or password.");
+				System.out.println();
+
+			}
 		}
 		
 		userDao.closeConnection();

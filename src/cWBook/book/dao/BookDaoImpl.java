@@ -67,13 +67,26 @@ public class BookDaoImpl implements BookDao{
 	}
 	
 	// adds a User and a Book to the book_user junction table to establish book ownership
-	public Optional<Book> add(Optional<User> user, Book book) throws SQLException {
+	public Optional<Book> add(Optional<User> user, Optional<Book> book) throws SQLException {
 		PreparedStatement pstmt = this.connection.prepareStatement("INSERT INTO book_user (book_id, user_id) VALUES ((SELECT book_id FROM book WHERE book.name = ?), (SELECT user_id FROM user WHERE user.first_name = ?))");
-		pstmt.setString(1, book.getName());
+		pstmt.setString(1, book.get().getName());
 		pstmt.setString(2, user.get().getFirstName());
 		pstmt.executeUpdate();
 		
-		return Optional.ofNullable(book);
+		return book;
+	}
+	
+	@Override
+	public boolean checkRelationship(Optional<User> user, Optional<Book> book) throws SQLException {
+		int book_id = getBookId(book.get().getName());
+		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM book_user WHERE user_id = ? AND book_id = " + book_id);
+		pstmt.setInt(1, user.get().getId());
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			return true;
+		}
+		return false;
 	}
 	
 	// adds a Book to the book table
@@ -100,5 +113,20 @@ public class BookDaoImpl implements BookDao{
 			return null;
 		}
 			
+	}
+	
+	@Override
+	// get book_id of a book by name
+	public int getBookId(String name) throws SQLException {
+		PreparedStatement pstmt = this.connection.prepareStatement("SELECT book_id FROM book WHERE name = ?");
+		pstmt.setString(1, name);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			return rs.getInt(1);
+		}
+		else {
+			return -1;
+		}
 	}
 }
