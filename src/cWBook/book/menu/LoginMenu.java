@@ -38,7 +38,7 @@ public class LoginMenu extends Menu {
 		}
 		
 		userDao.closeConnection();
-		scanner.close();
+		//scanner.close();
 	}
 	
 	public String getUserUsername(Scanner scanner) {
