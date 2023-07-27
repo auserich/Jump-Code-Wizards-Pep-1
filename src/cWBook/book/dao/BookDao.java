@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import cWBook.book.exception.InvalidRatingException;
 import cWBook.book.user.User;
 
 
@@ -24,6 +25,8 @@ public interface BookDao {
 	public boolean checkRelationship(Optional<User> user, Optional<Book> book) throws SQLException;
 	public int getBookId(String name) throws SQLException;
 	public boolean updateProgress(Optional<User> user, Optional<Book> book, String progress) throws SQLException;
+	// looks at roosevelt
+	public boolean updateRating(Optional<User> user, Optional<Book> book, int rating) throws InvalidRatingException, SQLException;
 	public boolean checkByName(String name) throws SQLException;
 	public boolean removeBook(Optional<User> user, Optional<Book> book) throws SQLException;
 }

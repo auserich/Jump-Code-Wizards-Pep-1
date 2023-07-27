@@ -3,13 +3,14 @@ package cWBook.book;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import cWBook.book.exception.InvalidRatingException;
 import cWBook.book.menu.CrudMenu;
 import cWBook.book.menu.LoginMenu;
 import cWBook.book.user.User;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvalidRatingException {
 		
 		// Prompt user for login information
 		LoginMenu login = new LoginMenu();

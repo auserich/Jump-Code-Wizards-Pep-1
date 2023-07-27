@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import cWBook.book.connection.ConnectionManager;
+import cWBook.book.exception.InvalidRatingException;
 import cWBook.book.user.User;
 
 public class BookDaoImpl implements BookDao{
@@ -62,9 +63,10 @@ public class BookDaoImpl implements BookDao{
 	
 	// adds a User and a Book to the book_user junction table to establish book ownership
 	public Optional<Book> add(Optional<User> user, Optional<Book> book) throws SQLException {
-		PreparedStatement pstmt = this.connection.prepareStatement("INSERT INTO book_user (book_id, user_id) VALUES ((SELECT book_id FROM book WHERE book.name = ?), (SELECT user_id FROM user WHERE user.first_name = ?))");
+		PreparedStatement pstmt = this.connection.prepareStatement("INSERT INTO book_user (book_id, user_id, progress) VALUES ((SELECT book_id FROM book WHERE book.name = ?), (SELECT user_id FROM user WHERE user.first_name = ?), (?))");
 		pstmt.setString(1, book.get().getName());
 		pstmt.setString(2, user.get().getFirstName());
+		pstmt.setString(3, "Not Completed");
 		pstmt.executeUpdate();
 		
 		return book;
@@ -137,6 +139,26 @@ public class BookDaoImpl implements BookDao{
 		
 		if (result == 1)
 			return true;
+		return false;
+	}
+	
+	@Override
+	// updates the progress status of an entry in the book_user junction table
+	public boolean updateRating(Optional<User> user, Optional<Book> book, int rating) throws SQLException, InvalidRatingException {
+		int book_id = getBookId(book.get().getName());
+		// rj cooking
+		if (rating > 5 || rating < 1) {
+			throw new InvalidRatingException("The rating scale is limited from 1 - 5 ");
+		}else {
+		PreparedStatement pstmt = this.connection.prepareStatement("UPDATE book_user SET rating = ? WHERE user_id = ? AND book_id = " + book_id);
+		pstmt.setInt(1, rating);
+		pstmt.setInt(2, user.get().getId());
+		
+		int result = pstmt.executeUpdate();
+
+		if (result == 1)
+			return true;
+		}
 		return false;
 	}
 	
