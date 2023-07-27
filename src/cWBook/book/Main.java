@@ -1,7 +1,11 @@
 package cWBook.book;
 
 import java.sql.SQLException;
+import java.util.Optional;
+
+import cWBook.book.menu.CrudMenu;
 import cWBook.book.menu.LoginMenu;
+import cWBook.book.user.User;
 
 public class Main {
 
@@ -9,14 +13,22 @@ public class Main {
 		
 		// Prompt user for login information
 		LoginMenu login = new LoginMenu();
-		login.display();
+		Optional<User> user = null;
+		
 		try {
-			login.getUserInput();
+			user = login.startLoginProcess();
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
+		if (user == null)
+			return;
 		
-		// TEST FUNCTIONS BELOW
-		
+		// Prompt user for CRUD interface
+		CrudMenu crud = new CrudMenu(user);
+		try {
+			crud.getUserInput();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

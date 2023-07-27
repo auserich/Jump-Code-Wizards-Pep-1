@@ -6,11 +6,10 @@ import java.util.Optional;
 
 public interface UserDao {
 	public void establishConnection() throws ClassNotFoundException, SQLException;
-	
 	public void closeConnection() throws SQLException;
-	
-	public List<User> getAll();
-	public Optional<User> findById(int id);
 	public List<User> findByUsername(String username) throws SQLException;
-	public Boolean authenticateUser(String username, String password) throws SQLException;
+	public Optional<User> authenticateUser(String username, String password) throws SQLException;
+	public boolean checkIfUserExists(String username) throws SQLException;
+	public void addUser(User user) throws SQLException;
+	public int getId(String username) throws SQLException;
 }

@@ -1,9 +1,11 @@
 package cWBook.book.dao;
 
 public class Book {
+
 	private int id;
 	private String name;
 	private int rating;
+	private String progress;
 	
 	public int getId() {
 		return id;
@@ -34,6 +36,15 @@ public class Book {
 		}
 	}
 	
+	public String getProgress() {
+		return progress;
+	}
+	
+	public void setProgress(String input) {
+		if (input == "Not Completed" || input == "In-Progress" || input == "Completed")
+			progress = input;
+	}
+	
 	@Override
 	public String toString() {
 		return "Book name " + this.name;
@@ -42,6 +53,17 @@ public class Book {
 	public Book(int id, String name, int rating) {
 		this.id = id;
 		this.name = name;
+		this.rating = rating;
+	}
+	
+	public Book(String name) {
+		this.name = name;
+		this.progress = "Not Completed";
+	}
+	
+	public Book(String name, String progress, int rating) {
+		this.name = name;
+		this.progress = progress;
 		this.rating = rating;
 	}
 

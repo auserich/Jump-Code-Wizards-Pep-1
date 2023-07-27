@@ -27,18 +27,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public List<User> getAll() {
-		
-		return null;
-	}
-
-	@Override
-	public Optional<User> findById(int id) {
-		
-		return Optional.empty();
-	}
-
-	@Override
+	// returns a list of Users that share the username value passed in
 	public List<User> findByUsername(String username) throws SQLException {
 		
 		List<User> users = new ArrayList<>();
@@ -51,25 +40,71 @@ public class UserDaoImpl implements UserDao {
 		{
 			users.add(new User
 			(
-					rs.getInt(1),
-					rs.getString(2),
-					rs.getString(3),
-					rs.getString(4),
-					rs.getString(5))
+				rs.getInt(1),
+				rs.getString(2),
+				rs.getString(3),
+				rs.getString(4),
+				rs.getString(5))
 			);
 		}
 		
 		return users;
 	}
+	
+	@Override
+	// checks if user exists in user table based on username
+	public boolean checkIfUserExists(String username) throws SQLException {
+		
+		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM user WHERE user.username = ?");
+		pstmt.setString(1, username);
+		ResultSet rs = pstmt.executeQuery();
+		
+		// if user was found with username, then username is already taken
+		if (rs.next())
+			return true;
+		else
+			return false;
+	}
 
 	@Override
-	public Boolean authenticateUser(String username, String password) throws SQLException {
+	// checks that the username and password values match their respective attributes in the User table
+	public Optional<User> authenticateUser(String username, String password) throws SQLException {
 		
 		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM user WHERE user.username = ? AND user.password = ?");
 		pstmt.setString(1, username);
 		pstmt.setString(2, password);
 		ResultSet rs = pstmt.executeQuery();
 		
-		return (rs.next()); // return true if query returned something
+		if (rs.next())
+			return Optional.of(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+		else
+			return null;
+	}
+
+	@Override
+	// adds a user to user table
+	public void addUser(User user) throws SQLException {
+		
+		PreparedStatement pstmt = this.connection.prepareStatement("INSERT INTO user (first_name, last_name, username, password) VALUES (?, ?, ?, ?)");
+		pstmt.setString(1, user.getFirstName());
+		pstmt.setString(2, user.getLastName());
+		pstmt.setString(3, user.getUsername());
+		pstmt.setString(4, user.getPassword());
+		pstmt.executeUpdate();
+	}
+	
+	@Override
+	// gets the user_id of a user in the user table from username
+	public int getId(String username) throws SQLException {
+		
+		PreparedStatement pstmt = this.connection.prepareStatement("SELECT user_id FROM user WHERE username = ?");
+		pstmt.setString(1, username);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next())
+			return rs.getInt(1);
+		else
+			return -1;
+
 	}
 }
