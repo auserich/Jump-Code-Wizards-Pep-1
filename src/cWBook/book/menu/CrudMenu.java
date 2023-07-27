@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import cWBook.book.dao.*;
+import cWBook.book.exception.InvalidProgressException;
 import cWBook.book.user.User;
 
 // class that handles CRUD UI and DAO calls
@@ -82,10 +83,11 @@ public class CrudMenu {
 					return true;
 				}
 
-				String progress = getUserProgress(scanner);
-				
-				if (progress.equals("bad_input")) {
-					System.out.println("Invalid progress option.");
+				String progress = null;
+				try {
+					progress = getUserProgress(scanner);
+				} catch (InvalidProgressException e) {
+					System.out.println(e.getMessage());
 					return true;
 				}
 				
@@ -145,7 +147,7 @@ public class CrudMenu {
 	}
 	
 	// gets desired progress status from user
-	public String getUserProgress(Scanner scanner) {
+	public String getUserProgress(Scanner scanner) throws InvalidProgressException {
 		String input;
 
 		System.out.println("Enter progress to set to:");
@@ -165,7 +167,7 @@ public class CrudMenu {
 				return "Completed";
 		}
 		
-		return "bad_input";
+		throw new InvalidProgressException("Invalid progress entered.");
 	}
 	
 	// checks and creates a book if needed before adding both User and Book IDs to junction table
