@@ -12,5 +12,4 @@ public abstract class Menu {
 	public abstract Optional<User> getUserInput() throws ClassNotFoundException, SQLException;
 	
 	public abstract void displayResults();
-	
 }

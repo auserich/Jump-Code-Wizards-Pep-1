@@ -1,14 +1,11 @@
 package cWBook.book.dao;
 
 public class Book {
-	private enum Progress {
-		NOT_COMPLETED, IN_PROGRESS, COMPLETED
-	};
-	
+
 	private int id;
 	private String name;
 	private int rating;
-	private Progress progress;
+	private String progress;
 	
 	public int getId() {
 		return id;
@@ -39,12 +36,13 @@ public class Book {
 		}
 	}
 	
-	public Progress getProgress() {
+	public String getProgress() {
 		return progress;
 	}
 	
-	public void setProgress(Progress input) {
-		progress = input;
+	public void setProgress(String input) {
+		if (input == "Not Completed" || input == "In-Progress" || input == "Completed")
+			progress = input;
 	}
 	
 	@Override
@@ -60,6 +58,12 @@ public class Book {
 	
 	public Book(String name) {
 		this.name = name;
+	}
+	
+	public Book(String name, String progress, int rating) {
+		this.name = name;
+		this.progress = progress;
+		this.rating = rating;
 	}
 
 }

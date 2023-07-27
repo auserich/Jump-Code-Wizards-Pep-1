@@ -29,27 +29,21 @@ public class BookDaoImpl implements BookDao{
 	}
 
 	@Override
-	public List<Book> getAll() {
+	// gets all books a user has
+	public List<Book> getUserBooks(Optional<User> user) throws SQLException {
 		List<Book> books = new ArrayList<>();
-		try {
-			Connection conn = ConnectionManager.getConnection();
-			// We do not need a prepared statement here as this can never be altered by input to cause error
-			Statement stmt = conn.createStatement();
-
-			ResultSet rs = stmt.executeQuery("SELECT * FROM book");
-
-			while (rs.next()) {
-				books.add(new Book(rs.getInt(1), rs.getString(2), rs.getInt(3)));
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		PreparedStatement pstmt = this.connection.prepareStatement("SELECT name, progress, rating FROM book_user JOIN book ON book_user.book_id = book.book_id WHERE user_id = ?");
+		pstmt.setInt(1, user.get().getId());
+		ResultSet rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			books.add(new Book(rs.getString(1), rs.getString(2), rs.getInt(3)));
 		}
-
 		return books;
 	}
 
 	@Override
+	// finds a book based on its book_id
 	public Optional<Book> findById(int id) {
 		Book book;
 		try {
@@ -77,6 +71,7 @@ public class BookDaoImpl implements BookDao{
 	}
 	
 	@Override
+	// checks if a relationship exists between a user and a book
 	public boolean checkRelationship(Optional<User> user, Optional<Book> book) throws SQLException {
 		int book_id = getBookId(book.get().getName());
 		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM book_user WHERE user_id = ? AND book_id = " + book_id);
@@ -128,5 +123,50 @@ public class BookDaoImpl implements BookDao{
 		else {
 			return -1;
 		}
+	}
+	
+	@Override
+	// updates the progress status of an entry in the book_user junction table
+	public boolean updateProgress(Optional<User> user, Optional<Book> book, String progress) throws SQLException {
+		int book_id = getBookId(book.get().getName());
+		PreparedStatement pstmt = this.connection.prepareStatement("UPDATE book_user SET progress = ? WHERE user_id = ? AND book_id = " + book_id);
+		pstmt.setString(1, progress);
+		pstmt.setInt(2, user.get().getId());
+		
+		int result = pstmt.executeUpdate();
+		
+		if (result == 1)
+			return true;
+		return false;
+	}
+	
+	@Override
+	// checks if book exists in book table
+	public boolean checkByName(String name) throws SQLException {
+		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM book WHERE book.name = ?");
+		pstmt.setString(1, name);
+		ResultSet rs = pstmt.executeQuery();
+		
+		// return book if found, otherwise return null
+		if (rs.next()) {
+			return true;
+		}
+		else {
+			System.out.println("Book not found.");
+			return false;
+		}
+	}
+	
+	@Override
+	// removes relationship between a user and a book
+	public boolean removeBook(Optional<User> user, Optional<Book> book) throws SQLException {
+		int book_id = getBookId(book.get().getName());
+		PreparedStatement pstmt = this.connection.prepareStatement("DELETE FROM book_user WHERE user_id = ? AND book_id = " + book_id);
+		pstmt.setInt(1, user.get().getId());
+		int result = pstmt.executeUpdate();
+		
+		if (result == 1)
+			return true;
+		return false;
 	}
 }
