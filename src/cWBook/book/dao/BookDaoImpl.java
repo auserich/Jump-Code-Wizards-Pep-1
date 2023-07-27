@@ -141,6 +141,21 @@ public class BookDaoImpl implements BookDao{
 	}
 	
 	@Override
+	// updates the progress status of an entry in the book_user junction table
+	public boolean updateRating(Optional<User> user, Optional<Book> book, int rating) throws SQLException {
+		int book_id = getBookId(book.get().getName());
+		PreparedStatement pstmt = this.connection.prepareStatement("UPDATE book_user SET rating = ? WHERE user_id = ? AND book_id = " + book_id);
+		pstmt.setInt(1, rating);
+		pstmt.setInt(2, user.get().getId());
+		
+		int result = pstmt.executeUpdate();
+		
+		if (result == 1)
+			return true;
+		return false;
+	}
+	
+	@Override
 	// checks if book exists in book table
 	public boolean checkByName(String name) throws SQLException {
 		PreparedStatement pstmt = this.connection.prepareStatement("SELECT * FROM book WHERE book.name = ?");
