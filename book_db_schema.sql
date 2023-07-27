@@ -27,7 +27,7 @@ CREATE table book_user
 (
 	book_id INT,
     user_id INT,
-    progress VARCHAR(20),
+    progress VARCHAR(20) DEFAULT 'Not Completed',
     CONSTRAINT chk_progress CHECK (progress IN ('Not Completed', 'In-Progress', 'Completed')),
     rating SMALLINT CHECK (rating BETWEEN 1 AND 5),
     CONSTRAINT book_user_pk PRIMARY KEY (book_id, user_id),

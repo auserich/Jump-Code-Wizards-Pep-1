@@ -152,7 +152,6 @@ public class BookDaoImpl implements BookDao{
 			return true;
 		}
 		else {
-			System.out.println("Book not found.");
 			return false;
 		}
 	}
