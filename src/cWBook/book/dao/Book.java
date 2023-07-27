@@ -1,5 +1,7 @@
 package cWBook.book.dao;
 
+import cWBook.book.exception.InvalidProgressException;
+
 public class Book {
 
 	private int id;
@@ -40,9 +42,12 @@ public class Book {
 		return progress;
 	}
 	
-	public void setProgress(String input) {
+	public void setProgress(String input) throws InvalidProgressException {
 		if (input == "Not Completed" || input == "In-Progress" || input == "Completed")
 			progress = input;
+		else {
+			throw new InvalidProgressException("Invalid progress.");
+		}
 	}
 	
 	@Override
