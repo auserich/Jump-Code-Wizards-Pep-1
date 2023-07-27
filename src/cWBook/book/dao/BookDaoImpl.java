@@ -63,10 +63,9 @@ public class BookDaoImpl implements BookDao{
 	
 	// adds a User and a Book to the book_user junction table to establish book ownership
 	public Optional<Book> add(Optional<User> user, Optional<Book> book) throws SQLException {
-		PreparedStatement pstmt = this.connection.prepareStatement("INSERT INTO book_user (book_id, user_id, progress) VALUES ((SELECT book_id FROM book WHERE book.name = ?), (SELECT user_id FROM user WHERE user.first_name = ?), (?))");
+		PreparedStatement pstmt = this.connection.prepareStatement("INSERT INTO book_user (book_id, user_id) VALUES ((SELECT book_id FROM book WHERE book.name = ?), (SELECT user_id FROM user WHERE user.first_name = ?))");
 		pstmt.setString(1, book.get().getName());
 		pstmt.setString(2, user.get().getFirstName());
-		pstmt.setString(3, "Not Completed");
 		pstmt.executeUpdate();
 		
 		return book;
