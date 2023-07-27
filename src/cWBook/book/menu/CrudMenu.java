@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import cWBook.book.dao.*;
 import cWBook.book.exception.InvalidProgressException;
+import cWBook.book.exception.InvalidRatingException;
 import cWBook.book.user.User;
 
 // class that handles CRUD UI and DAO calls
@@ -26,13 +27,14 @@ public class CrudMenu {
 		System.out.println("  1 -- Add Book");
 		System.out.println("  2 -- Review Progress");
 		System.out.println("  3 -- Update Progress");
-		System.out.println("  4 -- Remove Book");
-		System.out.println("  5 -- Logout");
+		System.out.println("  4 -- Update rating");
+		System.out.println("  5 -- Remove Book");
+		System.out.println("  6 -- Logout");
 		System.out.println();
 	}
 	
 	// gets users input and passes it to processing function
-	public void getUserInput() throws ClassNotFoundException, SQLException {
+	public void getUserInput() throws ClassNotFoundException, SQLException, InvalidRatingException {
 		Scanner scanner = new Scanner(System.in);
 		bookDao.establishConnection();
 		
@@ -41,6 +43,7 @@ public class CrudMenu {
 			display();
 			System.out.print(">> ");
 			String input = scanner.nextLine();
+			
 			result = processUserInput(scanner, input);
 		}
 		
@@ -49,8 +52,10 @@ public class CrudMenu {
 	}
 	
 	// processes user input through switch-case and calls appropriate functions
-	public boolean processUserInput(Scanner scanner, String input) throws SQLException {
+	public boolean processUserInput(Scanner scanner, String input) throws SQLException, InvalidRatingException {
 		String name = null;
+		boolean bookPresent;
+		boolean updateResult;
 		switch (input) {
 			// add
 			case "1":
@@ -76,7 +81,7 @@ public class CrudMenu {
 				System.out.println();
 				System.out.print("Enter name for book to update: ");
 				name = scanner.nextLine();
-				boolean bookPresent = bookDao.checkByName(name);
+				bookPresent = bookDao.checkByName(name);
 				
 				if (!bookPresent) {
 					System.out.println("Book not present.");
@@ -92,7 +97,7 @@ public class CrudMenu {
 				}
 				
 				System.out.println();
-				boolean updateResult = updateBook(name, progress);
+				updateResult = updateBook(name, progress);
 				if (updateResult) {
 					System.out.println("Book progress updated.");
 				}
@@ -100,8 +105,35 @@ public class CrudMenu {
 					System.out.println("Book not present.");
 				}
 				return true;
-			// remove	
+				//rating
 			case "4":
+				System.out.println();
+				printUserBooks();
+				
+				System.out.println();
+				System.out.print("Enter name for book to update: ");
+				name = scanner.nextLine();
+				bookPresent = bookDao.checkByName(name);
+				
+				if (!bookPresent) {
+					System.out.println("Book not present.");
+					return true;
+				}
+
+				int rating = getUserRating(scanner);
+							
+				System.out.println();
+				updateResult = updateBook(name, rating);
+				if (updateResult) {
+					System.out.println("Book rating updated.");
+				}
+				else {
+					System.out.println("Book not present.");
+				}
+				return true;
+				
+			// remove	
+			case "5":
 				System.out.println();
 				printUserBooks();
 				System.out.println();
@@ -116,7 +148,7 @@ public class CrudMenu {
 				}
 				return true;
 			// logout	
-			case "5":
+			case "6":
 				System.out.println("Logging user out.");
 				return false;
 				
@@ -127,6 +159,8 @@ public class CrudMenu {
 		return true;
 	}
 	
+	
+
 	// prints all books a user has
 	public void printUserBooks() throws SQLException {
 		List<Book> books = bookDao.getUserBooks(this.user);
@@ -166,8 +200,23 @@ public class CrudMenu {
 			case "3":
 				return "Completed";
 		}
-		
 		throw new InvalidProgressException("Invalid progress entered.");
+	}
+	
+		
+	public int getUserRating(Scanner scanner) throws InvalidRatingException {
+		int input;
+		
+		System.out.println("Enter rating of enjoyment:");
+		System.out.println("  Lowest 1 - Highest 5" + "\n");
+		
+		input = scanner.nextInt();
+		if (input > 5 || input < 1) {
+			throw new InvalidRatingException("Invalid rating given.");
+		
+		}
+		return input;
+		
 	}
 	
 	// checks and creates a book if needed before adding both User and Book IDs to junction table
@@ -232,4 +281,24 @@ public class CrudMenu {
 		bookDao.updateProgress(this.user, book, progress);
 		return true;
 	}
+	// updates the progress of a book
+		public boolean updateBook(String name, int rating) throws SQLException {
+			// check that book exists
+			Optional<Book> book = bookDao.findByName(name);
+			
+			// if book wasn't found
+			if (book == null) {
+				return false;
+			}
+			// if book is found, check that user has it added
+			else {
+				if (!bookDao.checkRelationship(this.user, book)) {
+					return false;
+				}
+			}
+			
+			// update only if book exists and is added by user
+			bookDao.updateRating(this.user, book, rating);
+			return true;
+		}
 }

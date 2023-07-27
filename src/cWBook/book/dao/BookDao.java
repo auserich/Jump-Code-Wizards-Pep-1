@@ -24,6 +24,8 @@ public interface BookDao {
 	public boolean checkRelationship(Optional<User> user, Optional<Book> book) throws SQLException;
 	public int getBookId(String name) throws SQLException;
 	public boolean updateProgress(Optional<User> user, Optional<Book> book, String progress) throws SQLException;
+	public boolean updateRating(Optional<User> user, Optional<Book> book, int rating) throws SQLException;
 	public boolean checkByName(String name) throws SQLException;
 	public boolean removeBook(Optional<User> user, Optional<Book> book) throws SQLException;
+
 }
