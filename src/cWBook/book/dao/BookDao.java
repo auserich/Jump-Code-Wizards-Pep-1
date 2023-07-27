@@ -19,6 +19,8 @@ public interface BookDao {
 	public List<Book> getAll();
 	public Optional<Book> findById(int id);
 	public Optional<Book> findByName(String name) throws SQLException;
-	public Optional<Book> add(Optional<User> user, Book book) throws SQLException;
+	public Optional<Book> add(Optional<User> user, Optional<Book> book) throws SQLException;
 	public Optional<Book> add(Optional<Book> book) throws SQLException;
+	public boolean checkRelationship(Optional<User> user, Optional<Book> book) throws SQLException;
+	public int getBookId(String name) throws SQLException;
 }

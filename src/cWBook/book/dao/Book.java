@@ -1,9 +1,14 @@
 package cWBook.book.dao;
 
 public class Book {
+	private enum Progress {
+		NOT_COMPLETED, IN_PROGRESS, COMPLETED
+	};
+	
 	private int id;
 	private String name;
 	private int rating;
+	private Progress progress;
 	
 	public int getId() {
 		return id;
@@ -32,6 +37,14 @@ public class Book {
 		} else {
 		this.rating = rating;
 		}
+	}
+	
+	public Progress getProgress() {
+		return progress;
+	}
+	
+	public void setProgress(Progress input) {
+		progress = input;
 	}
 	
 	@Override
