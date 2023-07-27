@@ -14,7 +14,7 @@ public class Main {
 		// Prompt user for login information
 		LoginMenu login = new LoginMenu();
 		Optional<User> user = null;
-
+		
 		try {
 			user = login.startLoginProcess();
 		} catch (ClassNotFoundException | SQLException e) {

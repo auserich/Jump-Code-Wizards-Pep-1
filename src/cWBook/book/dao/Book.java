@@ -58,6 +58,7 @@ public class Book {
 	
 	public Book(String name) {
 		this.name = name;
+		this.progress = "Not Completed";
 	}
 	
 	public Book(String name, String progress, int rating) {

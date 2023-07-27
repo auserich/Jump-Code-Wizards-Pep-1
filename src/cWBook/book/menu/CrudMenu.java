@@ -42,6 +42,9 @@ public class CrudMenu {
 			String input = scanner.nextLine();
 			result = processUserInput(scanner, input);
 		}
+		
+		bookDao.closeConnection();
+		scanner.close();
 	}
 	
 	// processes user input through switch-case and calls appropriate functions
@@ -69,15 +72,23 @@ public class CrudMenu {
 				System.out.println();
 				printUserBooks();
 				
-				boolean result = false;
-				while (!result) {
-					System.out.println();
-					System.out.print("Enter name for book to update: ");
-					name = scanner.nextLine();
-					result = bookDao.checkByName(name);
+				System.out.println();
+				System.out.print("Enter name for book to update: ");
+				name = scanner.nextLine();
+				boolean bookPresent = bookDao.checkByName(name);
+				
+				if (!bookPresent) {
+					System.out.println("Book not present.");
+					return true;
+				}
+
+				String progress = getUserProgress(scanner);
+				
+				if (progress.equals("bad_input")) {
+					System.out.println("Invalid progress option.");
+					return true;
 				}
 				
-				String progress = getUserProgress(scanner);
 				System.out.println();
 				boolean updateResult = updateBook(name, progress);
 				if (updateResult) {
@@ -89,6 +100,8 @@ public class CrudMenu {
 				return true;
 			// remove	
 			case "4":
+				System.out.println();
+				printUserBooks();
 				System.out.println();
 				System.out.print("Enter name for book to remove: ");
 				name = scanner.nextLine();
@@ -124,36 +137,35 @@ public class CrudMenu {
 	// prints all books and their progress (eventually rating)
 	public void printUserBooksProgress() throws SQLException {
 		List<Book> books = bookDao.getUserBooks(this.user);
-		System.out.printf("%-30s %-30s %-30s\n", "Current Book", "Progress", "Rating");
+		System.out.printf("%-30s %-30s\n", "Current Book", "Progress");
 		System.out.println();
 		for (Book book : books) {
-			System.out.printf("%-30s %-30s %-30s\n", book.getName(), book.getProgress(), book.getRating());
+			System.out.printf("%-30s %-30s\n", book.getName(), book.getProgress());
 		}
 	}
 	
 	// gets desired progress status from user
 	public String getUserProgress(Scanner scanner) {
 		String input;
-		while (true) {
-			System.out.println("Enter progress to set to:");
-			System.out.println("  1 -- Not Completed");
-			System.out.println("  2 -- In Progress");
-			System.out.println("  3 -- Completed");
-			System.out.println();
-			System.out.print(">> ");
+
+		System.out.println("Enter progress to set to:");
+		System.out.println("  1 -- Not Completed");
+		System.out.println("  2 -- In-Progress");
+		System.out.println("  3 -- Completed");
+		System.out.println();
+		System.out.print(">> ");
 			
-			input = scanner.nextLine();
-			switch (input) {
-				case "1":
-					return "Not Completed";
-				case "2":
-					return "In Progress";
-				case "3":
-					return "Completed";
-				default:
-					System.out.println("Invalid input.");
-			}
+		input = scanner.nextLine();
+		switch (input) {
+			case "1":
+				return "Not Completed";
+			case "2":
+				return "In-Progress";
+			case "3":
+				return "Completed";
 		}
+		
+		return "bad_input";
 	}
 	
 	// checks and creates a book if needed before adding both User and Book IDs to junction table
