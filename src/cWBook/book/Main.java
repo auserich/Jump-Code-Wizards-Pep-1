@@ -14,16 +14,16 @@ public class Main {
 		// Prompt user for login information
 		LoginMenu login = new LoginMenu();
 		Optional<User> user = null;
-		login.display();
+
 		try {
-			user = login.getUserInput();
+			user = login.startLoginProcess();
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		if (user == null)
 			return;
 		
-		// TEST FUNCTIONS BELOW
+		// Prompt user for CRUD interface
 		CrudMenu crud = new CrudMenu(user);
 		try {
 			crud.getUserInput();
